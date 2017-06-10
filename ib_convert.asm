@@ -74,31 +74,31 @@ IbBinToStr endp
 ; Expects the variable to be stored in the Little Endian format
 ; Manages the stack frame
 ; 1st arg = variable address [EBP + 16]
-; 2nd arg = variable size in 4-bit chunks [EBP + 12]
+; 2nd arg = variable size in nibbles [EBP + 12]
 ; 3rd arg = result string address [EBP + 8]
 IbHexToStr proc
   push ebp
   mov ebp, esp
 
   ; If the size of the variable is 0 => we're done
-  mov ebx, dword ptr[ebp + 12] ; variable size in 4-bit chunks
+  mov ebx, dword ptr[ebp + 12] ; variable size in nibbles
   cmp ebx, 0
   jle @IbHexToStr_end
 
   mov esi, dword ptr[ebp + 16] ; variable address
   ; Calculate in EDI the amount of separators we're gonna put
-  mov edi, ebx ; amount of 4-bit chunks
+  mov edi, ebx ; amount of nibbles
   dec edi ; to properly calculate the amount of separators
-  shr edi, 3 ; /= 8 (separator every 8 4-bit chunks === every 8 digits)
+  shr edi, 3 ; /= 8 (separator every 8 nibbles === every 8 digits)
   add edi, dword ptr[ebp + 8] ; add the string address
 
-  mov dh, 0 ; contains current amount of 4-bit chunks that we wrote modulo 8 [1..8]  
+  mov dh, 0 ; contains current amount of nibbles that we wrote modulo 8 [1..8]  
   mov dl, byte ptr[esi] ; load the first byte
-  mov cl, 0 ; contains the shift required to put the desired 4-bit chunk at the start of the register {0, 4}
-  ; Processing order: the first 4-bit chunk we read is placed at the end of the string
-@IbBinToStr_loopChunks:
+  mov cl, 0 ; contains the shift required to put the desired nibble at the start of the register {0, 4}
+  ; Processing order: the first nibble we read is placed at the end of the string
+@IbBinToStr_loopNibbles:
   mov al, dl
-  shr al, cl ; place the low or the high 4-bit chunk at the start
+  shr al, cl ; place the low or the high nibble at the start
   call IbGetHexDigitCode
   mov byte ptr[edi + ebx - 1], al
 
@@ -117,12 +117,12 @@ IbHexToStr proc
   ; Advance to the next byte if Cl == 8
   add cl, 4
   cmp cl, 8  
-  jne @IbBinToStr_loopChunks ; no need to load the next byte => keep processing    
+  jne @IbBinToStr_loopNibbles ; no need to load the next byte => keep processing    
   xor cl, cl ; reset the required shift
   ; Load the next byte
   inc esi
   mov dl, byte ptr[esi]      
-  jmp @IbBinToStr_loopChunks
+  jmp @IbBinToStr_loopNibbles
   
 
 @IbHexToStr_end:

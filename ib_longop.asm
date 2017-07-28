@@ -12,6 +12,7 @@
 ; The two arguments can be the same memory, however not with the result
 ; Expects the variable to be stored in the Little Endian format
 ; Manages the stack frame
+; Registers altered: EAX, EBX, ECX, EDX, ESI, EDI, EBP, ESP
 ; 1st arg = first operand address [EBP + 24]
 ; 2nd arg = first operand size in 32-bit chunks [EBP + 20]
 ; 3rd arg = second operand address [EBP + 16]
@@ -92,6 +93,7 @@ IbMulLong endp
 ; The overflow from the highest chunk(if present) is discarded
 ; Expects the variable to be stored in the Little Endian format
 ; Manages the stack frame
+; Registers altered: EAX, EBX, ECX, EDX, ESI, EDI, EBP, ESP
 ; 1st arg = long operand address [EBP + 16]
 ; 2nd arg = long operand size in 32-bit chunks [EBP + 12]
 ; 3rd arg = 32-bit operand [EBP + 8]
@@ -145,6 +147,7 @@ IbMulSelf32Long endp
 ; The long operand can't be the same memory as the result
 ; Expects the variable to be stored in the Little Endian format
 ; Manages the stack frame
+; Registers altered: EAX, EBX, ECX, EDX, ESI, EDI, EBP, ESP
 ; 1st arg = long operand address [EBP + 20]
 ; 2nd arg = long operand size in 32-bit chunks [EBP + 16]
 ; 3rd arg = 32-bit operand [EBP + 12]
@@ -195,6 +198,7 @@ IbMul32Long endp
 ; All three variables(args and result) can be the same memory
 ; Expects the variable to be stored in the Little Endian format
 ; Manages the stack frame
+; Registers altered: EAX, EBX, ECX, EDX, ESI, EDI, EBP, ESP
 ; 1st arg = first operand address [EBP + 20]
 ; 2nd arg = second operand address [EBP + 16]
 ; 3rd arg = result address [EBP + 12]
@@ -239,6 +243,7 @@ IbAddLong endp
 ; All three variables(args and result) can be the same memory
 ; Expects the variable to be stored in the Little Endian format
 ; Manages the stack frame
+; Registers altered: EAX, EBX, ECX, EDX, ESI, EDI, EBP, ESP
 ; 1st arg = first operand address [EBP + 20]
 ; 2nd arg = second operand address [EBP + 16]
 ; 3rd arg = result address [EBP + 12]

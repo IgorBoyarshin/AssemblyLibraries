@@ -10,6 +10,7 @@
 ; Puts separation character(' ') every 4 digits
 ; Expects the variable to be stored in the Little Endian format
 ; Manages the stack frame
+; Registers altered: EAX, EBX, ECX, DL, ESI, EDI, EBP, ESP
 ; 1st arg = variable address [EBP + 16]
 ; 2nd arg = variable size in bits [EBP + 12]
 ; 3rd arg = result string address [EBP + 8]
@@ -73,6 +74,7 @@ IbBinToStr endp
 ; Puts separation characters(' ') every 8 digits
 ; Expects the variable to be stored in the Little Endian format
 ; Manages the stack frame
+; Registers altered: AL, EBX, CL, EDX, ESI, EDI, EBP, ESP
 ; 1st arg = variable address [EBP + 16]
 ; 2nd arg = variable size in nibbles [EBP + 12]
 ; 3rd arg = result string address [EBP + 8]
@@ -135,6 +137,7 @@ IbHexToStr endp
 
 ; Converts the given hex digit into its ASCII code
 ; Ignores everything but the low 4 bits
+; Registers altered: AL
 ; 1st arg = hex digit [AL]
 ; result = ASCII code [AL]
 IbGetHexDigitCode proc

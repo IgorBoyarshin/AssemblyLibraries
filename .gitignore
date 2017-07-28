@@ -2,3 +2,5 @@
 *.obj
 *.bat
 test.asm
+
+.vscode

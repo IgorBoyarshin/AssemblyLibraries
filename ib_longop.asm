@@ -6,6 +6,53 @@
 
 ; «««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««
 
+; Divides the given long integer by 10
+; Performs division by 10 using the groups of bits(32) division method
+; The long integer and the result can be the same memory
+; Expects the variable to be stored in the Little Endian format
+; Manages the stack frame
+; Registers altered: EAX, EBX, ECX, EDX, ESI, EDI, EBP, ESP
+; 1st arg = long integer address [EBP + 20]
+; 2nd arg = long integer size in 32-bit chunks [EBP + 16]
+; 3rd arg = result address [EBP + 12]
+; 4th arg = remainder address [EBP + 8]
+IbDiv10Long proc
+  push ebp
+  mov ebp, esp
+
+  ; Retrieve args
+  mov esi, [ebp + 20] ; long integer address
+  mov edi, [ebp + 12] ; result address
+  mov ecx, dword ptr[ebp + 16] ; long integer size in 32-bit chunks
+
+  ; If the size of the long integer is 0 => we're done
+  cmp ecx, 0
+  jle @IbDiv10Long_end
+
+  shl ecx, 2 ; *4. Will contain the shift in bytes and 4 times the amount of chunks
+  xor edx, edx ; first remainder = 0
+  mov ebx, 10 ; to divide by
+@IbDiv10Long_loop:
+  mov eax, dword ptr[esi + ecx - 4] ; the high chunk  
+  ; the previous remainder is already stored in EDX
+
+  div ebx ; EBX == 10
+
+  mov dword ptr[edi + ecx - 4], eax ; result into memory
+  sub ecx, 4
+  jnz @IbDiv10Long_loop
+
+  mov ebx, dword ptr[ebp + 8] ; remainder address
+  mov dword ptr[ebx], edx ; move the remainder into memory
+
+@IbDiv10Long_end:
+  mov esp, ebp
+  pop ebp
+  ret 16
+IbDiv10Long endp
+
+; «««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««««
+
 ; Multiplies two long integers
 ; Expects(in 32-bit chunks): length(result) = length(operand1) * length(operand2)
 ; Expects the result to be clean(filled with 0s)
